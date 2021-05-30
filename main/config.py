@@ -1,6 +1,8 @@
+from dotenv import load_dotenv
 import os
 
 basedir=os.path.abspath(os.path.dirname(__file__))
+load_dotenv()
 
 class config():
     SECRET_KEY = os.getenv('SECRET_KEY', 'thissecretkey')
@@ -11,13 +13,14 @@ class config():
 
 class DevelopmentConfig(config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
+    #SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 class TestingConfig(config):
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     PRESERVE_CONTEXT_ON_EXCEPTION = False
 
