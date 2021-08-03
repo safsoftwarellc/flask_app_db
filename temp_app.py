@@ -1,16 +1,26 @@
-import lxml.etree as ET
+import requests
 
-root = ET.parse('Upload_Files/msg-ex21-credit-event-notice.xml').getroot()
-tree = ET.ElementTree(root)
-ns={'xmlns':'http://www.fpml.org/2009/FpML-4-6'}
+values={
+    'queueName':'queueName', 
+    'messageProperties':'', 
+    'hostName':'hostName',
+    'portNumber':'123', 
+    'queueManager':'queueManager',
+    'channel':'', 
+    'sslCipherSuite':'sslCipherSuite',
+    'useIBMCipherMappings':'useIBMCipherMappings',
+    'keyStorePwd':'keyStorePwd',
+    'trustStorePwd':'trustStorePwd'
+}
 
-for ele in root.iter():
-    if len(ele)==0:
-        #print(tree.getpath(ele))
-        xpath = tree.getelementpath(ele)
-        for key in ns:
-            xpath = xpath.replace('{'+ns[key]+'}', key+':')
-        print(xpath)
+files={
+    'messageFile': open('/Users/sunilduvvuru/Documents/git/flask_app_db/Upload_Files/msg-ex21-credit-event-notice.xml', 'rb'),
+    'keyStoreFile': open('/Users/sunilduvvuru/Documents/git/flask_app_db/Upload_Files/msg-ex21-credit-event-notice.xml', 'rb'),
+    'trustStoreFile': open('/Users/sunilduvvuru/Documents/git/flask_app_db/Upload_Files/msg-ex21-credit-event-notice.xml', 'rb')
+}
 
+res = requests.post('http://localhost:8080/rest/mq/postMessageTest', \
+    data=values, files=files)
 
+print(res.text)
 
