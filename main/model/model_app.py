@@ -45,3 +45,13 @@ class queue_config(db.Model):
 
     def __repr__(self):
         return 'Config Name - {} and Value - {}'.format(self.config_name, self.config_value)
+
+class certificates_info(db.Model):
+    __tablename__='certificates_info'
+    file_id = db.Column(db.Integer, primary_key=True)
+    file_name = db.Column(db.String(50), unique = True, nullable = False)
+    file_data = db.Column(db.LargeBinary)
+    update_date = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return 'File - {}'.format(self.file_name)

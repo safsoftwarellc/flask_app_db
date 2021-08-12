@@ -10,6 +10,9 @@ from main.controller.xml_controller import (
     saveXpathsForTemplateFile, getXpathsForTemplateFile,
     deleteXpathsForTemplateFile, getUpdatedTemplateXMLFile,
     getXpathNamesWithSampleDataForTemplateFile)
+from main.controller.queue_controller import (
+    saveCertificate, updateCertificate, removeCertificate, getCertificate,
+    saveQueueInformation, deleteQueueInformation, getQueueInformation)
 
 
 app = create_app('dev')

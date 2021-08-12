@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 import lxml.etree as ET
 import json
 import os
-from io import BytesIO, StringIO
+from io import BytesIO
 
 
 xml_app = Blueprint('xml_app', __name__)
