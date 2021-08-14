@@ -11,8 +11,9 @@ from main.controller.xml_controller import (
     deleteXpathsForTemplateFile, getUpdatedTemplateXMLFile,
     getXpathNamesWithSampleDataForTemplateFile)
 from main.controller.queue_controller import (
-    saveCertificate, updateCertificate, removeCertificate, getCertificate,
-    saveQueueInformation, deleteQueueInformation, getQueueInformation)
+    saveCertificate, removeCertificate, getCertificate,
+    saveQueueInformation, deleteQueueInformation, getQueueInformation,
+    postMessageToMQ, postMessageToSolaceQueue, getAllQueueNames, getAllCertificateInfo)
 
 
 app = create_app('dev')

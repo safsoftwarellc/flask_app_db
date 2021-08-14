@@ -1,6 +1,4 @@
 
-import json
-
 def get_namespace(full_xml_text):
     if full_xml_text.startswith('{'):
         return full_xml_text[1:full_xml_text.find('}')]
@@ -100,3 +98,8 @@ def get_xpath_names_with_sample_data(root, all_xpaths_json):
                 xpath_value = ele.text
         all_names[xpath_name] = xpath_value
     return all_names
+
+
+
+
+

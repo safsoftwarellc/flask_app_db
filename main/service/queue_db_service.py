@@ -4,8 +4,16 @@ import datetime
 
 
 def save_certificate_info(file_name, file):
-    data = certificates_info(file_name=file_name, file_data=file.read(), update_date=datetime.datetime.utcnow())
-    save_changes(data)
+    file_data = certificates_info.query.filter_by(file_name=file_name).first()
+    if file_data is not None:
+        file_data.file_data = file.read()
+        file_data.update_date=datetime.datetime.utcnow()
+        db.session.commit()
+        return {'status':'Existing File updated Successfull!'}
+    else:
+        data = certificates_info(file_name=file_name, file_data=file.read(), update_date=datetime.datetime.utcnow())
+        save_changes(data)
+        return {'status':'File Saved Successfull!'}
 
 def get_certificate_info(file_name):
     return certificates_info.query.filter_by(file_name=file_name).first()
@@ -14,11 +22,9 @@ def remove_certificate_info(file_name):
     file_data = certificates_info.query.filter_by(file_name=file_name).first()
     delete_changes(file_data)
 
-def update_certificate_info(file_name, file):
-    file_data = certificates_info.query.filter_by(file_name=file_name).first()
-    file_data.file_data = file.read()
-    file_data.update_date=datetime.datetime.utcnow()
-    db.session.commit()
+def get_all_certificate_info():
+    return certificates_info.query.all()
+
 
 def save_changes(data):
     db.session.add(data)
@@ -62,3 +68,9 @@ def get_queue_info(queue_name):
     for queue_config_record in queue_config_info:
         all_configs[queue_config_record.config_name]=queue_config_record.config_value
     return all_configs
+
+def get_all_queue_info():
+    query = db.session.query(queue_config.queue_name.distinct().label('queue_name'))
+    queue_names=[row.queue_name for row in query.all()]
+    return queue_names
+
