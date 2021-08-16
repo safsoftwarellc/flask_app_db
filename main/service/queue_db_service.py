@@ -41,7 +41,7 @@ Queue Config Table Actions
 
 def save_queue_info(queue_name, config_dict):
     queue_info_dict = get_queue_info(queue_name)
-    if queue_info_dict is not None:
+    if queue_info_dict is not None and len(queue_info_dict)>0:
         delete_queue_info(queue_name)
 
     for config_name, config_value in config_dict.items():
@@ -52,10 +52,10 @@ def save_queue_info(queue_name, config_dict):
     return True
 
 def delete_queue_info(queue_name):
-    config_dict = get_queue_info(queue_name)
-    if (config_dict is None) or config_dict.count()==0:
+    queue_config_info = queue_config.query.filter_by(queue_name=queue_name)
+    if (queue_config_info is None) or queue_config_info.count()==0:
         return False
-    for config_record in config_dict:
+    for config_record in queue_config_info:
         db.session.delete(config_record)
     db.session.commit()
     return True
@@ -63,7 +63,7 @@ def delete_queue_info(queue_name):
 def get_queue_info(queue_name):
     queue_config_info = queue_config.query.filter_by(queue_name=queue_name)
     all_configs = {}
-    if (queue_config_info is None) or  queue_config_info.count()==0:
+    if (queue_config_info is None) or queue_config_info.count()==0:
         return all_configs
     for queue_config_record in queue_config_info:
         all_configs[queue_config_record.config_name]=queue_config_record.config_value

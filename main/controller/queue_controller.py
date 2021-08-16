@@ -92,13 +92,14 @@ def postMessageToMQ():
     keystore_password=request.args.get('keystore_password')
     truststore_file_name=request.args.get('truststore_file_name')
     truststore_password=request.args.get('truststore_password')
+    messageProperties=request.args.get('messageProperties')
     json_data = request.get_json()
 
     queue_info = get_queue_info(queue_name)
     queue_info['keyStorePwd']=keystore_password
     queue_info['trustStorePwd']=truststore_password
     queue_info['queueName']=queue_name
-    queue_info['messageProperties']=''
+    queue_info['messageProperties']=messageProperties
     
 
     keystore_file =  get_certificate_info(keystore_file_name)
@@ -119,7 +120,7 @@ def postMessageToMQ():
         'trustStoreFile': truststore_file.file_data
     }
 
-    res = requests.post('http://localhost:8080/rest/mq/postMessageTestMessage',
+    res = requests.post('http://localhost:8080/rest/mq/postTextMessageTest',
         data=queue_info, files=files)
     
     return jsonify({'Status':res.text})
@@ -128,7 +129,27 @@ def postMessageToMQ():
 
 @queue_app.route('/postMessageToSolaceQueue', methods=['POST'])
 def postMessageToSolaceQueue():
-    pass
+    xmlfile_name=request.args.get('xmlfile_name')
+    queue_name=request.args.get('queue_name')
+    messageProperties=request.args.get('messageProperties')
+    json_data = request.get_json()
 
+    queue_info = get_queue_info(queue_name)
+    queue_info['queueName']=queue_name
+    queue_info['messageProperties']=messageProperties
+    queue_info['jmsCorrelationID']=''
 
+    file_info = get_xml_data(xmlfile_name)
+    all_xpaths_json = get_all_xpaths_for_file(xmlfile_name)
+    root = ET.parse(BytesIO(file_info.file_data)).getroot()
+    
+    root = get_updated_xml(root, all_xpaths_json, json_data)
+    if root is None:
+        return jsonify({'Status':'Unknown error!'})
+    str = ET.tostring(root, pretty_print=True)
+    queue_info['messageText']=str
 
+    res = requests.post('http://localhost:8080/rest/solace/postTextMessageTest',
+        data=queue_info)
+    
+    return jsonify({'Status':res.text})
