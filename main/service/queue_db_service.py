@@ -3,15 +3,16 @@ from main import db
 import datetime
 
 
-def save_certificate_info(file_name, file):
+def save_certificate_info(file_name, file, file_password):
     file_data = certificates_info.query.filter_by(file_name=file_name).first()
     if file_data is not None:
         file_data.file_data = file.read()
+        file_data.file_password = file_password
         file_data.update_date=datetime.datetime.utcnow()
         db.session.commit()
         return {'status':'Existing File updated Successfull!'}
     else:
-        data = certificates_info(file_name=file_name, file_data=file.read(), update_date=datetime.datetime.utcnow())
+        data = certificates_info(file_name=file_name, file_data=file.read(), file_password=file_password, update_date=datetime.datetime.utcnow())
         save_changes(data)
         return {'status':'File Saved Successfull!'}
 

@@ -40,7 +40,7 @@ class queue_config(db.Model):
     config_id = db.Column(db.Integer, primary_key=True)
     queue_name=db.Column(db.String(50), nullable = False)
     config_name=db.Column(db.String(80), nullable = False)
-    config_value=db.Column(db.String(120), nullable = False)
+    config_value=db.Column(db.String(120), nullable = True)
     update_date = db.Column(db.DateTime())
 
     def __repr__(self):
@@ -51,6 +51,7 @@ class certificates_info(db.Model):
     file_id = db.Column(db.Integer, primary_key=True)
     file_name = db.Column(db.String(50), unique = True, nullable = False)
     file_data = db.Column(db.LargeBinary)
+    file_password = db.Column(db.String(120), nullable = True)
     update_date = db.Column(db.DateTime())
 
     def __repr__(self):

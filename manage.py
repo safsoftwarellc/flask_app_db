@@ -11,7 +11,7 @@ from main.controller.xml_controller import (
     deleteXpathsForTemplateFile, getUpdatedTemplateXMLFile,
     getXpathNamesWithSampleDataForTemplateFile)
 from main.controller.queue_controller import (
-    saveCertificate, removeCertificate, getCertificate,
+    saveCertificate, removeCertificate, getCertificate, getCertificateInfo,
     saveQueueInformation, deleteQueueInformation, getQueueInformation,
     postMessageToMQ, postMessageToSolaceQueue, getAllQueueNames, getAllCertificateInfo)
 

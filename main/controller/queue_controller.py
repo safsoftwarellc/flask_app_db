@@ -18,6 +18,7 @@ queue_app = Blueprint('queue_app', __name__)
 
 @queue_app.route('/certificate', methods=['POST', 'PUT'])
 def saveCertificate():
+    file_password=request.form.get('cert_password')
     if 'cert_file' not in request.files:
         return jsonify({'status':'"cert_file" not found!'})
     cert_file=request.files['cert_file']
@@ -25,7 +26,7 @@ def saveCertificate():
         return jsonify({'status':'file not selected!'})
     elif cert_file:
         s_filename=secure_filename(cert_file.filename)
-        return jsonify(save_certificate_info(s_filename, cert_file))
+        return jsonify(save_certificate_info(s_filename, cert_file, file_password))
     else:
         return jsonify({'status':'unknown error!'})
 
@@ -42,6 +43,18 @@ def getCertificate():
     file_info =  get_certificate_info(file_name)
     return send_file(BytesIO(file_info.file_data), attachment_filename=file_name, as_attachment=True)
 
+@queue_app.route('/certificateInfo', methods=['GET'])
+def getCertificateInfo():
+    file_name=request.args.get('cert_file_name')
+    file_info =  get_certificate_info(file_name)
+
+    return jsonify({
+        'file_id':file_info.file_id,
+        'file_name':file_info.file_name,
+        'file_password':file_info.file_password,
+        'update_date':file_info.update_date
+    })
+
 @queue_app.route('/getAllCertificateInfo', methods=['GET'])
 def getAllCertificateInfo():
     all_files_info =  get_all_certificate_info()
@@ -50,6 +63,7 @@ def getAllCertificateInfo():
         files_info[file_data.file_id]={
         'file_id':file_data.file_id,
         'file_name':file_data.file_name,
+        'file_password':file_data.file_password,
         'update_date':file_data.update_date}
 
     return jsonify({'all files':files_info})
@@ -89,21 +103,18 @@ def postMessageToMQ():
     xmlfile_name=request.args.get('xmlfile_name')
     queue_name=request.args.get('queue_name')
     keystore_file_name=request.args.get('keystore_file_name')
-    keystore_password=request.args.get('keystore_password')
     truststore_file_name=request.args.get('truststore_file_name')
-    truststore_password=request.args.get('truststore_password')
     messageProperties=request.args.get('messageProperties')
     json_data = request.get_json()
 
-    queue_info = get_queue_info(queue_name)
-    queue_info['keyStorePwd']=keystore_password
-    queue_info['trustStorePwd']=truststore_password
-    queue_info['queueName']=queue_name
-    queue_info['messageProperties']=messageProperties
-    
-
     keystore_file =  get_certificate_info(keystore_file_name)
     truststore_file =  get_certificate_info(truststore_file_name)
+    
+    queue_info = get_queue_info(queue_name)
+    queue_info['queueName']=queue_name
+    queue_info['messageProperties']=messageProperties
+    queue_info['keyStorePwd']=keystore_file.file_password
+    queue_info['trustStorePwd']=truststore_file.file_password
 
     file_info = get_xml_data(xmlfile_name)
     all_xpaths_json = get_all_xpaths_for_file(xmlfile_name)
