@@ -20,6 +20,12 @@ from main.controller.excel_validations_controller import (
     getValidationExcelFileInfo, getAllValidationExcelFilesInfo
 )
 
+from main.controller.sql_db_controller import (
+    save_db_connection, get_db_connection, delete_db_connection, get_all_db_connection_info,
+    runSQL
+)
+
+
 app = create_app('dev')
 app.app_context().push()
 

@@ -56,3 +56,16 @@ class certificates_info(db.Model):
 
     def __repr__(self):
         return 'File - {}'.format(self.file_name)
+
+
+class db_connection_info(db.Model):
+    __tablename__='db_connection_info'
+    id = db.Column(db.Integer, primary_key=True)
+    db_name = db.Column(db.String(50), unique = True, nullable = False)
+    db_connection_string = db.Column(db.String(250), nullable = True)
+    db_user_name = db.Column(db.String(120), nullable = True)
+    db_password = db.Column(db.String(250), nullable = True)
+    update_date = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return 'Database name - {}'.format(self.db_name)
