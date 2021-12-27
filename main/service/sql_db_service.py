@@ -36,8 +36,9 @@ def delete_db_connection_info(db_name):
     delete_changes(read_db_connection_info(db_name))
     return {'status':'DB Info Deleted Successfull!'}
 
-def read_all_db_connection_info(db_name):
-    return db_connection_info.query.all()
+def read_all_db_connection_info():
+    print(db_connection_info.query.count())
+    return "Done"
 
 def save_changes(data):
     db.session.add(data)

@@ -1,9 +1,13 @@
-my_data = {
-    'name':'Sunil',
-    'grade':'1',
-    'score':'99'
-}
+"""
+    Data Frames
+"""
 
-for name, value in my_data.items():
-    print(name)
-    print(value)
+import pandas
+
+df = pandas.read_excel('Upload_Files/Validations.xlsx')
+print(df)
+"""
+dict_excel_data = df.to_dict(orient='records')
+for row in dict_excel_data:
+    print(row)
+"""

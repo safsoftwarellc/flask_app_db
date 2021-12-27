@@ -3,7 +3,9 @@ from werkzeug.utils import secure_filename
 from main.service.excel_db_service import (save_excel_info, update_excel_info, 
                                             get_excel_info, remove_excel_info,
                                             get_all_excel_info)
+from main.util.validation_util import validate_database_info, get_data_from_sheet
 from io import BytesIO
+import json
 
 excel_validations_app = Blueprint('excel_validations_app', __name__)
 
@@ -56,3 +58,30 @@ def getAllValidationExcelFilesInfo():
         'update_date':file_data.update_date}
 
     return jsonify({'all files':files_info})
+
+@excel_validations_app.route('/getValidationDataForTestCaseRowRef', methods=['GET'])
+def getValidationDataForTestCaseRowRef():
+    file_name=request.args.get('excel_file_name')
+    file_info =  get_excel_info(file_name)
+    df = get_data_from_sheet(BytesIO(file_info.excel_file_data), sheet_name = 'Sheet2')
+    print(df)
+    return jsonify({'all files':"Done"})
+
+@excel_validations_app.route('/validateTestInDatabase', methods=['GET'])
+def validateTestInDatabase():
+    excel_file_name=request.args.get('excel_file_name')
+    test_case_name=request.args.get('test_case_name')
+    row_ref=request.args.get('row_ref')
+    file_sheets=request.args.get('validation_sheets')
+    file_sheet_table_mapping=request.args.get('validation_sheets_table_mapping')
+    db_name=request.args.get('db_name')
+    excel_file_info =  get_excel_info(excel_file_name)
+    
+    file_sheet_table_mapping_json = json.loads(file_sheet_table_mapping)
+
+    validate_database_info(test_case_name, row_ref,
+                           BytesIO(excel_file_info.excel_file_data),
+                           file_sheets, file_sheet_table_mapping_json, db_name)
+    
+    return jsonify({'all files':"Done"})
+

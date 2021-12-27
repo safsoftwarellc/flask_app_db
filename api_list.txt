@@ -1,1 +1,47 @@
 http://127.0.0.1:5000/getAllTemplateXMLFiles
+
+
+Save XML Template
+Generate Xpaths and store for XML Template
+Get Updated XML file using data
+
+
+Save Certificate
+Save Queue information
+Post Message to MQ and Solace Queue
+
+Save DB Connection information
+Run SQL to get Data from DB
+
+Save Validation Excel files 
+
+Read Validation Excel as Dataframe
+Validate data in DB
+
+Reports - Store in DB and Generate HTML/Excel Reports
+
+UI Development
+
+ALM Integration
+
+
+-----Validate DB data code Logic
+
+Excel_File_Name
+TestCase and Row_Ref
+List of Tables to be validated (in Sheet)
+Table VS Sheets Mapping
+DB Connection Information
+
+Get File from DB
+
+Get Data from each sheet to DataFrame
+
+Get Test Case Data from All sheets to Dict
+
+Create a Query for each Table 
+
+Run Query in DB
+
+Validate Excel Data with DB Data
+
