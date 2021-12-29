@@ -75,13 +75,16 @@ def validateTestInDatabase():
     file_sheets=request.args.get('validation_sheets')
     file_sheet_table_mapping=request.args.get('validation_sheets_table_mapping')
     db_name=request.args.get('db_name')
+    test_data=request.args.get('test_data')
+    
     excel_file_info =  get_excel_info(excel_file_name)
     
     file_sheet_table_mapping_json = json.loads(file_sheet_table_mapping)
+    test_data_json = json.loads(test_data)
 
     validate_database_info(test_case_name, row_ref,
                            BytesIO(excel_file_info.excel_file_data),
-                           file_sheets, file_sheet_table_mapping_json, db_name)
+                           file_sheets, file_sheet_table_mapping_json, db_name, test_data_json)
     
     return jsonify({'all files':"Done"})
 
