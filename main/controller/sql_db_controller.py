@@ -16,11 +16,11 @@ def save_db_connection():
         'db_user_name': request.args.get('db_user_name'),
         'db_password': request.args.get('db_password')
     }
-
     if request.method == 'PUT':
-        return update_db_connection_info(db_info_dict)
+        return update_db_connection_info(**db_info_dict)
     else:
-        return create_db_connection_info(db_info_dict)
+        return create_db_connection_info(**db_info_dict)
+
 
 
 @sql_db_app.route('/db_connection', methods=['GET'])

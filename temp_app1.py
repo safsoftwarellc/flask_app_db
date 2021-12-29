@@ -1,13 +1,7 @@
-"""
-    Data Frames
-"""
+def add(a, b, c):
+    print("Done")
 
-import pandas
 
-df = pandas.read_excel('Upload_Files/Validations.xlsx')
-print(df)
-"""
-dict_excel_data = df.to_dict(orient='records')
-for row in dict_excel_data:
-    print(row)
-"""
+k = {'a':'1', 'b':'2', 'c':'3'}
+
+add(**k)

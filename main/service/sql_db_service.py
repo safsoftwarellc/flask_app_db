@@ -13,12 +13,21 @@ def create_db_connection_info(db_name,
         db_connection_string=db_connection_string,
         db_user_name=db_user_name,
         db_password=db_password,
-        update_date=datetime.datetime.utcnow())
+        update_date=datetime.datetime.utcnow()) 
     save_changes(data=data)
     return {'status':'DB Info Saved Successfull!'}
 
 def read_db_connection_info(db_name):
-    return db_connection_info.query.filter_by(db_name=db_name).first()
+    row_data = db_connection_info.query.filter_by(db_name=db_name).first()
+    row_info = {}
+    if row_data is not None:
+        row_info[row_data.db_name]={
+        'db_name':row_data.db_name,
+        'db_connection_string':row_data.db_connection_string,
+        'db_user_name':row_data.db_user_name,
+        'db_password':row_data.db_password,
+        'update_date':row_data.update_date}
+    return {'DB Info':row_info}
 
 def update_db_connection_info(db_name, 
                                 db_connection_string,
@@ -37,8 +46,16 @@ def delete_db_connection_info(db_name):
     return {'status':'DB Info Deleted Successfull!'}
 
 def read_all_db_connection_info():
-    print(db_connection_info.query.count())
-    return "Done"
+    all_rows = db_connection_info.query.all()
+    rows_info = {}
+    for row_data in all_rows:
+        rows_info[row_data.db_name]={
+        'db_name':row_data.db_name,
+        'db_connection_string':row_data.db_connection_string,
+        'db_user_name':row_data.db_user_name,
+        'db_password':row_data.db_password,
+        'update_date':row_data.update_date}
+    return {'DB Info':rows_info}
 
 def save_changes(data):
     db.session.add(data)
@@ -62,7 +79,8 @@ def get_data_from_db_using_SQL(db_connection_info, sql_query):
         conn = engine.connect()
 
         res = conn.execute(sql_query)
-        for row in res:
+        res_fecth_all = res.fetchall()
+        for row in res_fecth_all:
             sql_query_data.append(dict(row))
         
     except:
@@ -83,4 +101,6 @@ def get_data_from_db_using_SQL(db_connection_info, sql_query):
     return sql_query_data
 
     
-    
+def get_data_from_DB(db_name, sql_query):
+    db_connection_info = read_db_connection_info(db_name)
+    return get_data_from_db_using_SQL(db_connection_info, sql_query)
