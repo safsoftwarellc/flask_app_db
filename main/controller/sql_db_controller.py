@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from main.service.sql_db_service import (create_db_connection_info,
                                 read_db_connection_info, update_db_connection_info,
                                 delete_db_connection_info, read_all_db_connection_info,
-                                get_data_from_db_using_SQL)
+                                get_db_connection_info, get_data_from_db_using_SQL)
 import requests
 
 
@@ -45,6 +45,6 @@ def get_all_db_connection_info():
 def runSQL():
     db_name=request.args.get('db_name')
     sql_query=request.args.get('sql_query')
-    db_connection_info = read_db_connection_info(db_name)
+    db_connection_info = get_db_connection_info(db_name)
     return get_data_from_db_using_SQL(db_connection_info, sql_query)
 

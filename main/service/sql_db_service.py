@@ -17,8 +17,11 @@ def create_db_connection_info(db_name,
     save_changes(data=data)
     return {'status':'DB Info Saved Successfull!'}
 
+def get_db_connection_info(db_name):
+    return db_connection_info.query.filter_by(db_name=db_name).first()
+    
 def read_db_connection_info(db_name):
-    row_data = db_connection_info.query.filter_by(db_name=db_name).first()
+    row_data = get_db_connection_info(db_name)
     row_info = {}
     if row_data is not None:
         row_info[row_data.db_name]={
@@ -33,7 +36,7 @@ def update_db_connection_info(db_name,
                                 db_connection_string,
                                 db_user_name, 
                                 db_password):
-    data = read_db_connection_info(db_name)
+    data = get_db_connection_info(db_name)
     data.db_connection_string = db_connection_string
     data.db_user_name = db_user_name
     data.db_password = db_password
@@ -42,7 +45,7 @@ def update_db_connection_info(db_name,
     return {'status':'DB Info Saved Successfull!'}
 
 def delete_db_connection_info(db_name):
-    delete_changes(read_db_connection_info(db_name))
+    delete_changes(get_db_connection_info(db_name))
     return {'status':'DB Info Deleted Successfull!'}
 
 def read_all_db_connection_info():
