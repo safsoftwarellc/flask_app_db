@@ -66,7 +66,7 @@ def compare_data_as_string(expected, actual):
     return False
 
 def check_string_is_null(str_value):
-    if str(str_value).lower().strp() == 'nan':
+    if str(str_value).lower().strip() == 'nan':
         return True
     elif str(str_value).lower().strip() == 'none':
         return True
