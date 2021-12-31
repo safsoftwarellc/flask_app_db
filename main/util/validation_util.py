@@ -38,9 +38,9 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
                 for k, v in record.items():
                     if not check_excel_field_ignored(k):
                         if compare_data_as_string(v, db_record[k.lower()]):
-                            table_results.append(f"{k} column data - {v} Passed")
+                            table_results.append(f"(P) {k} column data - expected is [{v}] actual is [{db_record[k.lower()]}] Passed")
                         else:
-                            table_results.append(f"{k} column data - expected is [{v}] actual is [{db_record[k.lower()]}] failed")
+                            table_results.append(f"(F) {k} column data - expected is [{v}] actual is [{db_record[k.lower()]}] failed")
         final_test_results[sheet_name] = table_results
     return final_test_results
                 
@@ -68,7 +68,7 @@ def compare_data_as_string(expected, actual):
 def check_string_is_null(str_value):
     if str(str_value).lower().strp() == 'nan':
         return True
-    elif str(str_value).lower().strip() == 'None':
+    elif str(str_value).lower().strip() == 'none':
         return True
     elif str(str_value).lower().strip() == '':
         return True
