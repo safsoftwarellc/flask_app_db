@@ -26,9 +26,10 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
                         else:
                             sqlQuery = sqlQuery + ', '+k
                 sqlQuery = sqlQuery + " from "+db_table_name+" where "+ record["AUTO_Where_Clause"]
-                print(sqlQuery)
+                #print(sqlQuery)
                 #Run in DB
                 db_data = get_data_from_DB(db_name, sqlQuery)
+                #print(db_data)
                 
                 #Validate DB data vs Excel Data
                 if len(db_data)>1:
@@ -36,10 +37,10 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
                 db_record = db_data[0]
                 for k, v in record.items():
                     if not check_excel_field_ignored(k):
-                        if compare_data_as_string(v, db_record[k]):
+                        if compare_data_as_string(v, db_record[k.lower()]):
                             print(f"{k} column data - {v} Passed")
                         else:
-                            print(f"{k} column data - expected is {v} actual is {db_record[k]}")
+                            print(f"{k} column data - expected is {v} actual is {db_record[k.lower()]}")
     return "All are Tested"
                 
                 
@@ -57,25 +58,27 @@ def check_excel_field_ignored(excel_field_name):
     return False
 
 def compare_data_as_string(expected, actual):
-    if expected is actual:
+    if str(expected) == str(actual):
         return True
     return False
     
 def replace_test_data_values(test_case_data, test_data_json):
     for k, v in test_case_data.items():
         all_params_updated = False
-        startPostion = v.find('<')
-        endPostion = -1
-        while(startPostion==False):
-            if startPostion>-1:
-                endPostion = v.find('>', startPostion+1)
-            if startPostion>-1 and endPostion>startPostion:
-                parameter_name = v[startPostion+1:endPostion]
-                if parameter_name in test_data_json:
-                    test_case_data[k]=v.replace(v[startPostion:endPostion+1], test_data_json[parameter_name])
-                startPostion = v.find('<', endPostion)                    
-            else:
-                all_params_updated = True
+        if v is not pandas.np.nan:
+            string_value = str(v)
+            startPostion = string_value.find('<')
+            endPostion = -1
+            while(all_params_updated==False):
+                if startPostion>-1:
+                    endPostion = string_value.find('>', startPostion+1)
+                if startPostion>-1 and endPostion>startPostion:
+                    parameter_name = string_value[startPostion+1:endPostion]
+                    if parameter_name in test_data_json:
+                        test_case_data[k]=string_value.replace(string_value[startPostion:endPostion+1], test_data_json[parameter_name])
+                    startPostion = string_value.find('<', endPostion)                    
+                else:
+                    all_params_updated = True
     return test_case_data        
-            
+    
             
