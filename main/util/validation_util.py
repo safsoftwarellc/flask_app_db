@@ -40,7 +40,7 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
                         if compare_data_as_string(v, db_record[k.lower()]):
                             print(f"{k} column data - {v} Passed")
                         else:
-                            print(f"{k} column data - expected is {v} actual is {db_record[k.lower()]}")
+                            print(f"{k} column data - expected is [{v}] actual is [{db_record[k.lower()]}]")
     return "All are Tested"
                 
                 
