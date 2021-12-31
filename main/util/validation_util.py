@@ -1,4 +1,5 @@
 import pandas
+import getpass
 from main.service.sql_db_service import get_data_from_DB
 
 def validate_database_info(test_case_name, row_ref, excel_file_data, 
@@ -59,9 +60,32 @@ def check_excel_field_ignored(excel_field_name):
     return False
 
 def compare_data_as_string(expected, actual):
-    if str(expected) == str(actual):
+    if str(expected).upper().startswith('STARTS_WITH{') and str(actual).startswith(str(expected)[12:-1]):
         return True
+    elif str(expected).upper().startswith('ENDS_WITH{') and str(actual).endswith(str(expected)[10:-1]):
+        return True
+    elif str(expected).upper().startswith('CONTAINS{') and str(actual).__contains__(str(expected)[9:-1]):
+        return True
+    elif str(expected).upper().startswith('OR{') and (str(actual) in [x.strip() for x in str(expected)[3:-1].split('|')]):
+        return True
+    elif str(expected).upper() == 'NOT_NULL' and check_string_is_null(actual) is False:
+        return True
+    elif str(expected).upper() == 'SYSTEM_USER' and str(actual).lower()==getpass.getuser().lower():
+        return True
+    elif str(expected).upper() == 'NOT_NULL_GREATER_THAN_ZERO':
+        try:
+            if int(actual)>0:
+                return True
+        except:
+            return False
+        return False
     elif check_string_is_null(expected) and check_string_is_null(actual):
+        return True
+    elif str(expected).upper() == 'NULL_VALUE' and str(actual).upper()=='NULL':
+        return True
+    elif str(expected).upper() == 'ANY_VALUE':
+        return True
+    elif str(expected) == str(actual):
         return True
     return False
 
@@ -69,6 +93,8 @@ def check_string_is_null(str_value):
     if str(str_value).lower().strip() == 'nan':
         return True
     elif str(str_value).lower().strip() == 'none':
+        return True
+    elif str(str_value).lower().strip() == 'null':
         return True
     elif str(str_value).lower().strip() == '':
         return True
