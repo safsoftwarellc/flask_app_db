@@ -82,9 +82,9 @@ def validateTestInDatabase():
     file_sheet_table_mapping_json = json.loads(file_sheet_table_mapping)
     test_data_json = json.loads(test_data)
 
-    validate_database_info(test_case_name, row_ref,
+    final_test_results = validate_database_info(test_case_name, row_ref,
                            BytesIO(excel_file_info.excel_file_data),
                            file_sheets, file_sheet_table_mapping_json, db_name, test_data_json)
     
-    return jsonify({'all files':"Done"})
+    return jsonify(final_test_results)
 

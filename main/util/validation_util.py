@@ -7,11 +7,11 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
     file_sheets_list = None
     if file_sheets is not None:
         file_sheets_list = file_sheets.split(',')
-        
+    final_test_results = {}
     for sheet_name in file_sheets_list:
+        table_results = []
         test_case_data = get_testcase_data_by_row_ref(excel_file_data, sheet_name.strip(), test_case_name, row_ref)
         if not test_case_data.empty:
-            
             db_table_name = file_sheet_table_mapping_json[sheet_name.strip()]
             records_list = test_case_data.to_dict(orient='records')
             #print(rows_list)
@@ -38,10 +38,11 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
                 for k, v in record.items():
                     if not check_excel_field_ignored(k):
                         if compare_data_as_string(v, db_record[k.lower()]):
-                            print(f"{k} column data - {v} Passed")
+                            table_results.append(f"{k} column data - {v} Passed")
                         else:
-                            print(f"{k} column data - expected is [{v}] actual is [{db_record[k.lower()]}]")
-    return "All are Tested"
+                            table_results.append(f"{k} column data - expected is [{v}] actual is [{db_record[k.lower()]}] failed")
+        final_test_results[sheet_name] = table_results
+    return final_test_results
                 
                 
 def get_testcase_data_by_row_ref(excel_file_data, sheet_name, test_case_name, row_ref):
@@ -60,8 +61,19 @@ def check_excel_field_ignored(excel_field_name):
 def compare_data_as_string(expected, actual):
     if str(expected) == str(actual):
         return True
+    elif check_string_is_null(expected) and check_string_is_null(actual):
+        return True
     return False
-    
+
+def check_string_is_null(str_value):
+    if str(str_value).lower().strp() == 'nan':
+        return True
+    elif str(str_value).lower().strip() == 'None':
+        return True
+    elif str(str_value).lower().strip() == '':
+        return True
+    return False
+        
 def replace_test_data_values(test_case_data, test_data_json):
     for k, v in test_case_data.items():
         all_params_updated = False
