@@ -124,7 +124,6 @@ def validateTestInDatabase():
     test_case_name=request.args.get('test_case_name')
     row_ref=request.args.get('row_ref')
     file_sheets=request.args.get('validation_sheets')
-    file_sheet_table_mapping=request.args.get('validation_sheets_table_mapping')
     db_name=request.args.get('db_name')
     test_data=request.args.get('test_data')
     
