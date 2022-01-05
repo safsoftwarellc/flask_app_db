@@ -2,7 +2,12 @@ from flask import Blueprint, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from main.service.excel_db_service import (save_excel_info, update_excel_info, 
                                             get_excel_info, remove_excel_info,
-                                            get_all_excel_info)
+                                            get_all_excel_info, save_db_table_excel_sheet_mapping_info, 
+                                            update_db_table_excel_sheet_mapping_info,
+                                            get_db_table_excel_sheet_mapping_info, 
+                                            remove_db_table_excel_sheet_mapping_info,
+                                            get_all_db_table_excel_sheet_mapping_info)
+
 from main.util.validation_util import validate_database_info, get_data_from_sheet
 from io import BytesIO
 import json
@@ -59,6 +64,52 @@ def getAllValidationExcelFilesInfo():
 
     return jsonify({'all files':files_info})
 
+
+
+@excel_validations_app.route('/excelSheetDBTableMappingInfo', methods=['POST', 'PUT'])
+def saveExcelSheetDBTableMappingInfo():
+    mapping_data = request.get_json()
+    file_name=request.args.get('excel_file_name')
+    
+    if file_name=='':
+        return jsonify({'status':'file info not provided!'})
+    
+    if request.method == 'PUT':
+        return jsonify(save_db_table_excel_sheet_mapping_info(file_name, mapping_data))
+    else:
+        return jsonify(update_db_table_excel_sheet_mapping_info(file_name, mapping_data))
+    
+    
+@excel_validations_app.route('/excelSheetDBTableMappingInfo', methods=['DELETE'])
+def removeExcelSheetDBTableMappingInfo():
+    file_name=request.args.get('excel_file_name')
+    return jsonify(remove_db_table_excel_sheet_mapping_info(file_name))
+
+@excel_validations_app.route('/excelSheetDBTableMappingInfo', methods=['GET'])
+def getExcelSheetDBTableMappingInfo():
+    file_name=request.args.get('excel_file_name')
+    mapping_info =  get_db_table_excel_sheet_mapping_info(file_name)
+
+    return jsonify({
+        'id':mapping_info.id,
+        'excel_id':mapping_info.excel_id,
+        'table_mapping':mapping_info.table_mapping,
+        'update_date':mapping_info.update_date
+    })
+
+@excel_validations_app.route('/getAllExcelSheetDBTableMappingInfo', methods=['GET'])
+def getAllExcelSheetDBTableMappingInfo():
+    all_mapping_info =  get_all_db_table_excel_sheet_mapping_info()
+    mapping_info = {}
+    for mapping_data in all_mapping_info:
+        mapping_info[mapping_data.id]={
+        'id':mapping_data.id,
+        'excel_id':mapping_data.excel_id,
+        'table_mapping':mapping_data.table_mapping,
+        'update_date':mapping_data.update_date}
+
+    return jsonify({'all data':mapping_info})
+
 @excel_validations_app.route('/getValidationDataForTestCaseRowRef', methods=['GET'])
 def getValidationDataForTestCaseRowRef():
     file_name=request.args.get('excel_file_name')
@@ -79,7 +130,10 @@ def validateTestInDatabase():
     
     excel_file_info =  get_excel_info(excel_file_name)
     
-    file_sheet_table_mapping_json = json.loads(file_sheet_table_mapping)
+    #file_sheet_table_mapping_json = json.loads(file_sheet_table_mapping)
+    mapping_info =  get_db_table_excel_sheet_mapping_info(excel_file_name)
+    file_sheet_table_mapping_json = mapping_info.table_mapping
+    
     test_data_json = json.loads(test_data)
 
     final_test_results = validate_database_info(test_case_name, row_ref,

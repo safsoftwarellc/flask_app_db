@@ -69,3 +69,14 @@ class db_connection_info(db.Model):
 
     def __repr__(self):
         return 'Database name - {}'.format(self.db_name)
+
+
+class db_table_excel_sheet_mapping(db.Model):
+    __tablename__='db_table_excel_sheet_mapping'
+    id = db.Column(db.Integer, primary_key=True)
+    excel_id = db.Column(db.Integer, unique=True, nullable = False)
+    table_mapping=db.Column(db.String(600), nullable=False)
+    update_date = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return 'table_mapping - {}'.format(self.table_mapping)

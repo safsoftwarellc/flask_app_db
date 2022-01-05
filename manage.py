@@ -17,7 +17,9 @@ from main.controller.queue_controller import (
 
 from main.controller.excel_validations_controller import (
     saveValidationExcelFile, getValidationExcelFile, removeValidationExcelFile,
-    getValidationExcelFileInfo, getAllValidationExcelFilesInfo, validateTestInDatabase
+    getValidationExcelFileInfo, getAllValidationExcelFilesInfo, validateTestInDatabase,
+    saveExcelSheetDBTableMappingInfo, removeExcelSheetDBTableMappingInfo, 
+    getExcelSheetDBTableMappingInfo, getAllExcelSheetDBTableMappingInfo
 )
 
 from main.controller.sql_db_controller import (
