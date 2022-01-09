@@ -45,6 +45,15 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
         final_test_results[sheet_name] = table_results
     return final_test_results
                 
+
+def validate_xml_info(xml_string, xml_template_name, test_case_name, row_ref, 
+                      excel_file_data, file_sheet_name, test_data_json):
+    pass
+
+def validate_json_info(json_data, test_case_name, row_ref, 
+                       excel_file_data, file_sheet_name, test_data_json):
+    pass
+
                 
 def get_testcase_data_by_row_ref(excel_file_data, sheet_name, test_case_name, row_ref):
     df = pandas.read_excel(excel_file_data, sheet_name = sheet_name)

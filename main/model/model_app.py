@@ -1,5 +1,16 @@
 from main import db
 
+
+class user_info(db.Model):
+    __tablename__='user_info'
+    user_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String(25), unique = True, nullable = False)
+    user_password = db.Column(db.String(50), unique = False, nullable = False)
+    update_date = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return 'User - {}'.format(self.user_name)
+
 class xml_data(db.Model):
     __tablename__='xml_data'
     file_id = db.Column(db.Integer, primary_key=True)

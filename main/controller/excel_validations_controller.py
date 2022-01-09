@@ -141,3 +141,34 @@ def validateTestInDatabase():
     
     return jsonify(final_test_results)
 
+@excel_validations_app.route('/validateExcelDataWithXMLData', methods=['GET'])
+def validateExcelDataWithXMLData():
+    excel_file_name=request.args.get('excel_file_name')
+    test_case_name=request.args.get('test_case_name')
+    row_ref=request.args.get('row_ref')
+    xml_template_name=request.args.get('xml_template_name')
+    test_data=request.args.get('test_data')
+    xml_data = request.get_data()
+    
+    test_data_json = json.loads(test_data)
+    
+
+@excel_validations_app.route('/validateExcelDataWithJSONData', methods=['GET'])
+def validateExcelDataWithJSONData():
+    excel_file_name=request.args.get('excel_file_name')
+    test_case_name=request.args.get('test_case_name')
+    row_ref=request.args.get('row_ref')
+    test_data=request.args.get('test_data')
+    json_data = request.get_json()
+    
+    test_data_json = json.loads(test_data)
+
+
+
+
+
+
+
+
+
+
