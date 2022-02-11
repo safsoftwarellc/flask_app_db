@@ -8,7 +8,7 @@ from main.service.excel_db_service import (save_excel_info, update_excel_info,
                                             remove_db_table_excel_sheet_mapping_info,
                                             get_all_db_table_excel_sheet_mapping_info,
                                             save_json_path_data_info,remove_json_path_data_info,
-                                            get_json_path_data_info,get_all_json_path_data_info)
+                                            get_json_path_data_info,get_json_path_data_all_file_names)
 from main.service.xml_db_service import (get_all_xpaths_for_file)
 from main.util.validation_util import (validate_database_info, get_data_from_sheet, validate_xml_info, validate_json_info)
 from io import BytesIO, StringIO, TextIOWrapper
@@ -138,10 +138,21 @@ def getJSONPathDataInfo():
         return {'status':'File not found in system!'}
     all_json_recors = []
     for json_path_record in all_json_paths:
-        all_json_recors.append(json_path_record.json_path_string, json_path_record.json_path_name)
+        all_json_recors.append(json_path_record.json_path_string + "-" +json_path_record.json_path_name)
         
     return jsonify({file_name:all_json_recors})
 
+@excel_validations_app.route('/getAllJSONPathInfo', methods=['GET'])
+def getAllJSONPathDataInfo():
+    all_json_files =  get_json_path_data_all_file_names()
+    
+    if all_json_files is None:
+        return {'status':'Files not found in system!'}
+    
+    all_files = []
+    for row in all_json_files:
+        all_files.append(row.json_file_name)
+    return jsonify({'all files':all_files})
 
 @excel_validations_app.route('/getValidationDataForTestCaseRowRef', methods=['GET'])
 def getValidationDataForTestCaseRowRef():

@@ -28,6 +28,7 @@ from main.controller.excel_validations_controller import (
     saveExcelSheetDBTableMappingInfo, removeExcelSheetDBTableMappingInfo, 
     getExcelSheetDBTableMappingInfo, getAllExcelSheetDBTableMappingInfo,
     saveJSONPathDataInfo, removeJSONPathDataInfo, getJSONPathDataInfo,
+    getAllJSONPathDataInfo,
     validateExcelDataWithXMLData, validateExcelDataWithJSONData)
 
 from main.controller.sql_db_controller import (

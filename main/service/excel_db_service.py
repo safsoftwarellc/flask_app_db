@@ -79,6 +79,7 @@ def get_all_db_table_excel_sheet_mapping_info():
 
 
 def save_json_path_data_info(file_name, json_path_mapping):
+
     json_path_data_from_table = get_json_path_data_info(file_name=file_name)
     if json_path_data_from_table is not None:
         delete_json_paths_into_db(json_path_data_from_table)
@@ -86,10 +87,16 @@ def save_json_path_data_info(file_name, json_path_mapping):
     return {'status':'Information Saved Successfull!'}
 
 def get_json_path_data_info(file_name):
-    all_json_paths = json_path_data.query.filter_by(file_name=file_name)
+    all_json_paths = json_path_data.query.filter_by(json_file_name=file_name)
     if (all_json_paths is None) or all_json_paths.count()==0:
         return None
     return all_json_paths
+
+def get_json_path_data_all_file_names():
+    all_json_files = db.session.query(json_path_data.json_file_name.distinct().label("json_file_name")).all()
+    if (all_json_files is None) or len(all_json_files)==0:
+        return None
+    return all_json_files
 
 def remove_json_path_data_info(file_name):
     json_path_data_from_table = get_json_path_data_info(file_name=file_name)
@@ -102,8 +109,11 @@ def get_all_json_path_data_info():
     return json_path_data.query.all()
 
 def add_json_paths_into_db(file_name, json_path_dict):
-    if len(json_path_dict)>0:
-        for json_path_full_string in json_path_dict:
+    if 'all_json_paths' not in json_path_dict:
+        return False
+    all_json_paths = json_path_dict['all_json_paths']
+    if len(all_json_paths)>0:
+        for json_path_full_string in all_json_paths:
             (json_path_name, json_path_string) = split_json_path_full_string(json_path_full_string)
             json_path_record = json_path_data(json_file_name=file_name, 
                                               json_path_name=json_path_name, 
