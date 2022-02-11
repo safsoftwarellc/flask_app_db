@@ -224,8 +224,15 @@ def validateExcelDataWithJSONData():
     excel_file_info =  get_excel_info(excel_file_name)
     
     json_path_data_info =  get_json_path_data_info(json_file_name)
+    
+    if (json_path_data_info is None) or json_path_data_info.count()==0:
+        return {'status':'File not found in system!'}
+    all_json_path_records = []
+    for json_path_record in json_path_data_info:
+        all_json_path_records.append(json_path_record.json_path_string + "-" +json_path_record.json_path_name)
+        
 
-    final_test_results = validate_json_info(json_data, json_path_data_info, 
+    final_test_results = validate_json_info(json_data, all_json_path_records, 
                                             test_case_name, row_ref, 
                                             BytesIO(excel_file_info.excel_file_data), 
                                             excel_file_sheet, test_data_json)
