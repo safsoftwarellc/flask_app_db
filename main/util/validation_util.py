@@ -1,6 +1,8 @@
 import pandas
 import getpass
 from main.service.sql_db_service import get_data_from_DB
+from main.util.xml_util import split_xpath_full_string, get_namespace_info_from_xpaths
+from jsonpath_ng import jsonpath, parse
 
 def validate_database_info(test_case_name, row_ref, excel_file_data, 
                            file_sheets, file_sheet_table_mapping_json, db_name, test_data_json):
@@ -11,7 +13,8 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
     final_test_results = {}
     for sheet_name in file_sheets_list:
         table_results = []
-        test_case_data = get_testcase_data_by_row_ref(excel_file_data, sheet_name.strip(), test_case_name, row_ref)
+        test_case_data = get_testcase_data_by_row_ref(excel_file_data, sheet_name.strip(), 
+                                                      test_case_name, row_ref)
         if not test_case_data.empty:
             db_table_name = file_sheet_table_mapping_json[sheet_name.strip()]
             records_list = test_case_data.to_dict(orient='records')
@@ -46,13 +49,70 @@ def validate_database_info(test_case_name, row_ref, excel_file_data,
     return final_test_results
                 
 
-def validate_xml_info(xml_string, xml_template_name, test_case_name, row_ref, 
+def validate_xml_info(root, xpaths_dict, test_case_name, row_ref, 
                       excel_file_data, file_sheet_name, test_data_json):
-    pass
+    test_case_data = get_testcase_data_by_row_ref(excel_file_data, file_sheet_name.strip(), 
+                                                  test_case_name, row_ref)
+    final_test_results = {}
+    xml_results = []
+    records_list = test_case_data.to_dict(orient='records')
+    record = replace_test_data_values(records_list[0], test_data_json)
+    # get expected Data from excel 
+    # replace data values with test data
+    # Loop XPaths dict
+    # find xpath in root
+    # compare data
+    ns_json = get_namespace_info_from_xpaths(xpaths_dict)
+    all_xpaths = xpaths_dict['allXpaths']
+    for xpath_full_string in all_xpaths:
+        (xpath_name, xpath_string) = split_xpath_full_string(xpath_full_string)
+        print(xpath_name)
+        if xpath_name in record:
+            xpath_value = record[xpath_name]
+            if ns_json is None:
+                for ele in root.xpath(xpath_string):
+                    if compare_data_as_string(xpath_value, ele.text):
+                        xml_results.append(f"(P) {xpath_string} data - expected is [{xpath_value}] actual is [{ele.text}] Passed")
+                    else:
+                        xml_results.append(f"(F) {xpath_string} data - expected is [{xpath_value}] actual is [{ele.text}] Failed")
+            else:
+                for ele in root.xpath(xpath_string, namespaces=ns_json):
+                    if compare_data_as_string(xpath_value, ele.text):
+                        xml_results.append(f"(P) {xpath_string} data - expected is [{xpath_value}] actual is [{ele.text}] Passed")
+                    else:
+                        xml_results.append(f"(F) {xpath_string} data - expected is [{xpath_value}] actual is [{ele.text}] Failed")
+    
+    final_test_results['xml_results'] = xml_results
+    return final_test_results
 
-def validate_json_info(json_data, test_case_name, row_ref, 
+
+def validate_json_info(json_data, json_data_column_mapping, test_case_name, row_ref, 
                        excel_file_data, file_sheet_name, test_data_json):
-    pass
+    test_case_data = get_testcase_data_by_row_ref(excel_file_data, file_sheet_name.strip(), 
+                                                  test_case_name, row_ref)
+    final_test_results = {}
+    json_results = []
+    records_list = test_case_data.to_dict(orient='records')
+    record = replace_test_data_values(records_list[0], test_data_json)
+    
+    # Loop json_data_column_mapping
+    # FInd JSON Path in json_data and get Value
+    # compare
+    for json_path_full_string in json_data_column_mapping:
+        (json_path_name, json_path_string) = split_json_path_full_string(json_path_full_string)
+        jsonpath_expr= parse(json_path_string)
+        json_path_value_array = jsonpath_expr.find(json_data)
+        json_path_value = json_path_value_array[0].value
+        if json_path_name in record:
+            json_path_excel_value = record[json_path_name]
+            if compare_data_as_string(json_path_excel_value, json_path_value):
+                json_results.append(f"(P) {json_path_string} data - expected is [{json_path_excel_value}] actual is [{json_path_value}] Passed")
+            else:
+                json_results.append(f"(F) {json_path_string} data - expected is [{json_path_excel_value}] actual is [{json_path_value}] Failed")
+
+    final_test_results['json_results'] = json_results
+    
+    return final_test_results
 
                 
 def get_testcase_data_by_row_ref(excel_file_data, sheet_name, test_case_name, row_ref):
@@ -128,4 +188,8 @@ def replace_test_data_values(test_case_data, test_data_json):
                     all_params_updated = True
     return test_case_data        
     
-            
+def split_json_path_full_string(json_path_full_string):
+    lastIndex = json_path_full_string.rfind('-')
+    xpath_name = json_path_full_string[lastIndex+1:].strip()
+    xpath_string = json_path_full_string[:lastIndex].strip()
+    return (xpath_name, xpath_string)

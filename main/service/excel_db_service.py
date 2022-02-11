@@ -1,4 +1,5 @@
-from main.model.model_app import excel_data, db_table_excel_sheet_mapping
+from main.model.model_app import (excel_data, db_table_excel_sheet_mapping, 
+                                  json_path_data)
 from main import db
 import datetime
 
@@ -72,3 +73,57 @@ def remove_db_table_excel_sheet_mapping_info(file_name):
 def get_all_db_table_excel_sheet_mapping_info():
     return db_table_excel_sheet_mapping.query.all()
 
+"""
+    JSON Path Data
+"""
+
+
+def save_json_path_data_info(file_name, json_path_mapping):
+    json_path_data_from_table = get_json_path_data_info(file_name=file_name)
+    if json_path_data_from_table is not None:
+        delete_json_paths_into_db(json_path_data_from_table)
+    add_json_paths_into_db(file_name, json_path_mapping)
+    return {'status':'Information Saved Successfull!'}
+
+def get_json_path_data_info(file_name):
+    all_json_paths = json_path_data.query.filter_by(file_name=file_name)
+    if (all_json_paths is None) or all_json_paths.count()==0:
+        return None
+    return all_json_paths
+
+def remove_json_path_data_info(file_name):
+    json_path_data_from_table = get_json_path_data_info(file_name=file_name)
+    if json_path_data_from_table is not None:
+        delete_json_paths_into_db(json_path_data_from_table)
+        return {'status':'Information deleted Successfull!'}
+    return {'status':'File not found in system for delete!'}
+
+def get_all_json_path_data_info():
+    return json_path_data.query.all()
+
+def add_json_paths_into_db(file_name, json_path_dict):
+    if len(json_path_dict)>0:
+        for json_path_full_string in json_path_dict:
+            (json_path_name, json_path_string) = split_json_path_full_string(json_path_full_string)
+            json_path_record = json_path_data(json_file_name=file_name, 
+                                              json_path_name=json_path_name, 
+                                              json_path_string=json_path_string,
+                                              update_date=datetime.datetime.utcnow())
+            db.session.add(json_path_record)
+        db.session.commit()
+    return True
+
+def delete_json_paths_into_db(json_path_dict):
+    if (json_path_dict is None) or json_path_dict.count()==0:
+        return 0
+    total_json_paths_count = json_path_dict.count()
+    for json_path_record in json_path_dict:
+        db.session.delete(json_path_record)
+    db.session.commit()
+    return total_json_paths_count
+
+def split_json_path_full_string(json_path_full_string):
+    lastIndex = json_path_full_string.rfind('-')
+    xpath_name = json_path_full_string[lastIndex+1:].strip()
+    xpath_string = json_path_full_string[:lastIndex].strip()
+    return (xpath_name, xpath_string)

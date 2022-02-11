@@ -26,7 +26,9 @@ from main.controller.excel_validations_controller import (
     saveValidationExcelFile, getValidationExcelFile, removeValidationExcelFile,
     getValidationExcelFileInfo, getAllValidationExcelFilesInfo, validateTestInDatabase,
     saveExcelSheetDBTableMappingInfo, removeExcelSheetDBTableMappingInfo, 
-    getExcelSheetDBTableMappingInfo, getAllExcelSheetDBTableMappingInfo)
+    getExcelSheetDBTableMappingInfo, getAllExcelSheetDBTableMappingInfo,
+    saveJSONPathDataInfo, removeJSONPathDataInfo, getJSONPathDataInfo,
+    validateExcelDataWithXMLData, validateExcelDataWithJSONData)
 
 from main.controller.sql_db_controller import (
     save_db_connection, get_db_connection, delete_db_connection, get_all_db_connection_info,

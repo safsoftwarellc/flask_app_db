@@ -47,6 +47,8 @@ Validate Excel Data with DB Data
 
 --------------------------------------------------
 Excel file-->DB Table vs SheetName mapping Table in DB
+User Info Table and API
+Map User Login with all APIs
 XML vs Excel Data Validations
 API vs Excel Data Validations
 Run End to End

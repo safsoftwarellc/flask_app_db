@@ -6,11 +6,14 @@ from main.service.excel_db_service import (save_excel_info, update_excel_info,
                                             update_db_table_excel_sheet_mapping_info,
                                             get_db_table_excel_sheet_mapping_info, 
                                             remove_db_table_excel_sheet_mapping_info,
-                                            get_all_db_table_excel_sheet_mapping_info)
-
-from main.util.validation_util import validate_database_info, get_data_from_sheet
-from io import BytesIO
+                                            get_all_db_table_excel_sheet_mapping_info,
+                                            save_json_path_data_info,remove_json_path_data_info,
+                                            get_json_path_data_info,get_all_json_path_data_info)
+from main.service.xml_db_service import (get_all_xpaths_for_file)
+from main.util.validation_util import (validate_database_info, get_data_from_sheet, validate_xml_info, validate_json_info)
+from io import BytesIO, StringIO, TextIOWrapper
 import json
+import lxml.etree as ET
 
 excel_validations_app = Blueprint('excel_validations_app', __name__)
 
@@ -75,9 +78,9 @@ def saveExcelSheetDBTableMappingInfo():
         return jsonify({'status':'file info not provided!'})
     
     if request.method == 'PUT':
-        return jsonify(save_db_table_excel_sheet_mapping_info(file_name, mapping_data))
-    else:
         return jsonify(update_db_table_excel_sheet_mapping_info(file_name, mapping_data))
+    else:
+        return jsonify(save_db_table_excel_sheet_mapping_info(file_name, mapping_data))
     
     
 @excel_validations_app.route('/excelSheetDBTableMappingInfo', methods=['DELETE'])
@@ -109,6 +112,36 @@ def getAllExcelSheetDBTableMappingInfo():
         'update_date':mapping_data.update_date}
 
     return jsonify({'all data':mapping_info})
+
+@excel_validations_app.route('/JSONPathInfo', methods=['POST', 'PUT'])
+def saveJSONPathDataInfo():
+    json_path_mapping = request.get_json()
+    file_name=request.args.get('json_file_name')
+    
+    if file_name=='':
+        return jsonify({'status':'file info not provided!'})
+    
+    return jsonify(save_json_path_data_info(file_name, json_path_mapping))
+    
+    
+@excel_validations_app.route('/JSONPathInfo', methods=['DELETE'])
+def removeJSONPathDataInfo():
+    file_name=request.args.get('json_file_name')
+    return jsonify(remove_json_path_data_info(file_name))
+
+@excel_validations_app.route('/JSONPathInfo', methods=['GET'])
+def getJSONPathDataInfo():
+    file_name=request.args.get('json_file_name')
+    all_json_paths =  get_json_path_data_info(file_name)
+    
+    if (all_json_paths is None) or all_json_paths.count()==0:
+        return {'status':'File not found in system!'}
+    all_json_recors = []
+    for json_path_record in all_json_paths:
+        all_json_recors.append(json_path_record.json_path_string, json_path_record.json_path_name)
+        
+    return jsonify({file_name:all_json_recors})
+
 
 @excel_validations_app.route('/getValidationDataForTestCaseRowRef', methods=['GET'])
 def getValidationDataForTestCaseRowRef():
@@ -144,25 +177,49 @@ def validateTestInDatabase():
 @excel_validations_app.route('/validateExcelDataWithXMLData', methods=['GET'])
 def validateExcelDataWithXMLData():
     excel_file_name=request.args.get('excel_file_name')
+    excel_file_sheet=request.args.get('excel_file_sheet')
     test_case_name=request.args.get('test_case_name')
     row_ref=request.args.get('row_ref')
     xml_template_name=request.args.get('xml_template_name')
     test_data=request.args.get('test_data')
     xml_data = request.get_data()
     
+    root = ET.fromstring(xml_data)
+    
     test_data_json = json.loads(test_data)
     
+    excel_file_info =  get_excel_info(excel_file_name)
+    xpaths_dict = get_all_xpaths_for_file(xml_template_name)
+    
+    final_test_results = validate_xml_info(root, xpaths_dict, 
+                                           test_case_name, row_ref, 
+                                           BytesIO(excel_file_info.excel_file_data),
+                                           excel_file_sheet, test_data_json)
+    return jsonify(final_test_results)
+    #return jsonify({'a':'aa'})
 
 @excel_validations_app.route('/validateExcelDataWithJSONData', methods=['GET'])
 def validateExcelDataWithJSONData():
+    json_file_name=request.args.get('json_file_name')
     excel_file_name=request.args.get('excel_file_name')
+    excel_file_sheet=request.args.get('excel_file_sheet')
     test_case_name=request.args.get('test_case_name')
     row_ref=request.args.get('row_ref')
     test_data=request.args.get('test_data')
     json_data = request.get_json()
     
     test_data_json = json.loads(test_data)
+    
+    excel_file_info =  get_excel_info(excel_file_name)
+    
+    json_path_data_info =  get_json_path_data_info(json_file_name)
 
+    final_test_results = validate_json_info(json_data, json_path_data_info, 
+                                            test_case_name, row_ref, 
+                                            BytesIO(excel_file_info.excel_file_data), 
+                                            excel_file_sheet, test_data_json)
+    
+    return jsonify(final_test_results)
 
 
 

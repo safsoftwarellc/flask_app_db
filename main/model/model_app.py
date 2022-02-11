@@ -91,3 +91,14 @@ class db_table_excel_sheet_mapping(db.Model):
 
     def __repr__(self):
         return 'table_mapping - {}'.format(self.table_mapping)
+
+class json_path_data(db.Model):
+    __tablename__='json_path_excel_sheet_mapping'
+    id = db.Column(db.Integer, primary_key=True)
+    json_file_name=db.Column(db.String(100), nullable=False)
+    json_path_name=db.Column(db.String(50), nullable=False)
+    json_path_string=db.Column(db.String(250), nullable=False)
+    update_date = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return 'json_path_string - {}'.format(self.json_path_string)
