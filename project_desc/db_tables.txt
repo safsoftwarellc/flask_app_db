@@ -1,0 +1,23 @@
+DB Tables
+
+  - Projects
+  - Users
+  - User_Projects
+  - Project_Roles
+  - User_Roles
+  - User_Image
+
+  - Payload_templates
+  - Payload_template_mappings
+  - Excel_files
+  - Excel_Column_mappings
+  - Queue_Config
+  - db_connection_info
+  - certificates_info
+
+  - Test_Script
+  - Test_Steps
+  - Test_Script_Run_Info
+  - Test_Detail_Results
+
+  

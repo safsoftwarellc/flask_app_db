@@ -35,6 +35,9 @@ from main.controller.sql_db_controller import (
     save_db_connection, get_db_connection, delete_db_connection, get_all_db_connection_info,
     runSQL)
 
+from main.controller.test_scropts_contrller import (
+    PostToMQAnXMLAndValidateInDB, PostMultipleToMQAnXMLAndValidateInDB)
+
 app = create_app('dev')
 app.app_context().push()
 

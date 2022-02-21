@@ -1,0 +1,23 @@
+http://127.0.0.1:5000/getAllTemplateXMLFiles
+
+
+Reports - Store in DB and Generate HTML/Excel Reports
+
+ALM Integration
+
+--------------------------------------------------
+User Info Table and API
+Map User Login with all APIs
+Run End to End
+
+
+XML, Flat File, Fix File
+
+Check how to run 100 TCs for each template easily (End-to-End)
+--------------------------------------------------
+Build UI
+Make Login permissions
+Make Reports as clean
+Look for Admin, Manager and Tester Options
+
+

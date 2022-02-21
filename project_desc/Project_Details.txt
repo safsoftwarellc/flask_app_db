@@ -1,0 +1,60 @@
+Design Model using PostgreSQL DB
+
+User Types:
+  Read Only - Only Reports
+  Project Admin - Add Edit Users and Permissions
+  Tester - All Modules not to add Users
+  System Admin - Add Multiple Projects
+  
+Support Multi Projects
+    - Project - CRUD
+    - Multiple Projects can be access by One User
+
+Login and Logout
+    - Update Password
+    - Update Image
+
+Templates
+  Payload Templates
+    XMLs, JSON, FlatFile - CRUD
+  Xpaths, JSONPaths - CRUD
+Manage Data
+  Test Data Excels
+  Validation Excels (Also Mapping)
+Components
+  Queue Info - CRUD
+  DB Info -CRUD
+  Certificates - CRUD
+Testing
+  Test Scripts
+  Debug Module (Individual and Grouping)
+  Run Module (Individual and Grouping, Parallel)
+  Results Module (Live and OLD reports)
+
+Types of Tests can be done
+  API, Queues, Database, Inbound and Outbound Interfaces, Feeds and NAS Locations
+
+Workflow:
+    Create Test Script for
+        - Prepare Payload (XML, JSON, Text file)
+        - Post to Queue, API, NAS Location
+        - Validate DB, XML, JSON Values
+        - Post Another
+        - Validate
+        - Post Another
+        - Validate
+    Create another Test Script for
+        - Get (read) from API or NAS Location
+        - Validate the Output with DB
+        - Do Another
+    Run these TCs in Data Driven
+
+
+Micro Services
+  - Messaging Services in Java
+  - Validation Engine (DB, XML, JSON)
+  - Generating Payloads using Templates and Excel Data
+  - Manage Test Data for any Testing Project
+  - Reporting (HTML) Module
+
+  
