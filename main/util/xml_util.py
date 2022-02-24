@@ -1,3 +1,5 @@
+import pandas
+
 
 def get_namespace(full_xml_text):
     if full_xml_text.startswith('{'):
@@ -44,12 +46,13 @@ def replace_xml_values_by_xpath(root, all_xpaths_json, json_data, ns):
         (xpath_name, xpath_string) = split_xpath_full_string(xpath_full_string)
         if xpath_name in json_data:
             xpath_value = json_data[xpath_name]
-            if ns is None:
-                for ele in root.xpath(xpath_string):
-                    ele.text = xpath_value
-            else:
-                for ele in root.xpath(xpath_string, namespaces=ns):
-                    ele.text = xpath_value
+            if not pandas.isna(xpath_value):
+                if ns is None:
+                    for ele in root.xpath(xpath_string):
+                        ele.text = str(xpath_value)
+                else:
+                    for ele in root.xpath(xpath_string, namespaces=ns):
+                        ele.text = str(xpath_value)
             
     return root
                     
