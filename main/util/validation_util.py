@@ -102,9 +102,6 @@ def validate_json_info(json_data, json_data_column_mapping, test_case_name, row_
         (json_path_name, json_path_string) = split_json_path_full_string(json_path_full_string)
         jsonpath_expr= parse(json_path_string)
         json_path_value_array = jsonpath_expr.find(json_data)
-        print(json_data)
-        print(json_path_string)
-        print(json_path_value_array)
         json_path_value = "NULL"
         if len(json_path_value_array)>0:
             json_path_value = json_path_value_array[0].value

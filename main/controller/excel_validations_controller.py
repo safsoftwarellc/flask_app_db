@@ -207,7 +207,6 @@ def validateExcelDataWithXMLData():
                                            BytesIO(excel_file_info.excel_file_data),
                                            excel_file_sheet, test_data_json)
     return jsonify(final_test_results)
-    #return jsonify({'a':'aa'})
 
 @excel_validations_app.route('/validateExcelDataWithJSONData', methods=['GET'])
 def validateExcelDataWithJSONData():
