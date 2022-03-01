@@ -5,6 +5,7 @@ from main.service.xml_db_service import (get_xml_data, get_all_xpaths_for_file)
 from main.service.queue_db_service import (get_certificate_info, get_queue_info)
 import requests
 import json
+import ast
 from main.service.excel_db_service import (get_excel_info, 
                                            get_db_table_excel_sheet_mapping_info, 
                                            get_json_path_data_info)
@@ -52,7 +53,7 @@ def validateTestInDatabase(excel_file_name, test_case_name, row_ref,
     
     #file_sheet_table_mapping_json = json.loads(file_sheet_table_mapping)
     mapping_info =  get_db_table_excel_sheet_mapping_info(excel_file_info.data_id)
-    file_sheet_table_mapping_json = mapping_info.table_mapping
+    file_sheet_table_mapping_json = ast.literal_eval(mapping_info.table_mapping)
     
     test_data_json = json.loads(test_data)
 
