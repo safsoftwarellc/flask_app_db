@@ -98,6 +98,10 @@ def PostMultipleToMQAnXMLAndValidateInDB():
         post_to_mq(message_str, queue_name, messageProperties, 
                 keystore_file_name, truststore_file_name)
     
+    for record in records_list:
+        test_case_name = record['TestCaseName']
+        row_ref = record['Validation_row_ref']
+        
         #Validate in DB
         final_test_results = validateTestInDatabase(validation_excel_file_name, 
                                                     test_case_name, row_ref, 
