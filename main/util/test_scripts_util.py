@@ -51,7 +51,7 @@ def validateTestInDatabase(excel_file_name, test_case_name, row_ref,
     excel_file_info =  get_excel_info(excel_file_name)
     
     #file_sheet_table_mapping_json = json.loads(file_sheet_table_mapping)
-    mapping_info =  get_db_table_excel_sheet_mapping_info(excel_file_name)
+    mapping_info =  get_db_table_excel_sheet_mapping_info(excel_file_info.data_id)
     file_sheet_table_mapping_json = mapping_info.table_mapping
     
     test_data_json = json.loads(test_data)

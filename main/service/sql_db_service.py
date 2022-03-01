@@ -105,5 +105,5 @@ def get_data_from_db_using_SQL(db_connection_info, sql_query):
 
     
 def get_data_from_DB(db_name, sql_query):
-    db_connection_info = read_db_connection_info(db_name)
+    db_connection_info = get_db_connection_info(db_name)
     return get_data_from_db_using_SQL(db_connection_info, sql_query)

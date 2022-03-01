@@ -57,9 +57,8 @@ def update_db_table_excel_sheet_mapping_info(file_name, table_mapping):
         return {'status':'Existing File Information updated Successfull!'}
     return {'status':'File Information not found in system for update!'}
 
-def get_db_table_excel_sheet_mapping_info(file_name):
-    excel_info = get_excel_info(file_name)
-    return db_table_excel_sheet_mapping.query.filter_by(excel_id=excel_info.data_id).first()
+def get_db_table_excel_sheet_mapping_info(excel_id):
+    return db_table_excel_sheet_mapping.query.filter_by(excel_id=excel_id).first()
 
 def remove_db_table_excel_sheet_mapping_info(file_name):
     excel_info = get_excel_info(file_name)
