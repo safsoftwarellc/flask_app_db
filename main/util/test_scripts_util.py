@@ -26,7 +26,6 @@ def prepare_xml(xmlfile_name, json_data):
 def post_to_mq(message_str, queue_name, messageProperties, 
                keystore_file_name, truststore_file_name):
     queue_info = get_queue_info(queue_name)
-    queue_info['queueName']=queue_name
     queue_info['messageProperties']=messageProperties
     
     keystore_file =  get_certificate_info(keystore_file_name)
@@ -41,7 +40,7 @@ def post_to_mq(message_str, queue_name, messageProperties,
         'trustStoreFile': truststore_file.file_data
     }
     
-    res = requests.post('http://localhost:8080/rest/mq/postTextMessageTest',
+    res = requests.post('http://localhost:8080/rest/mq/postTextMessage',
         data=queue_info, files=files)
     
     return {'Status':res.text}

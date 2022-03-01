@@ -40,7 +40,7 @@ def PostToMQAnXMLAndValidateInDB():
     #Prepare XML
     test_data_excel_file_info =  get_excel_info(test_data_file_name)
     df = pandas.read_excel(BytesIO(test_data_excel_file_info.excel_file_data), 
-                           sheet_name = test_data_file_sheet_name)
+                           sheet_name = test_data_file_sheet_name, dtype='object')
     test_case_data = df.query(test_data_file_query)
     records_list = test_case_data.to_dict(orient='records')
     
@@ -81,7 +81,7 @@ def PostMultipleToMQAnXMLAndValidateInDB():
     #Prepare XML
     test_data_excel_file_info =  get_excel_info(test_data_file_name)
     df = pandas.read_excel(BytesIO(test_data_excel_file_info.excel_file_data), 
-                           sheet_name = test_data_file_sheet_name)
+                           sheet_name = test_data_file_sheet_name, dtype='object')
     test_case_data = df.query(test_data_file_query)
     records_list = test_case_data.to_dict(orient='records')
     

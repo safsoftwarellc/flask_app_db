@@ -41,7 +41,7 @@ def get_all_excel_info():
 def save_db_table_excel_sheet_mapping_info(file_name, table_mapping):
     excel_info = get_excel_info(file_name)
     data = db_table_excel_sheet_mapping(excel_id=excel_info.data_id, 
-                    table_mapping=table_mapping, 
+                    table_mapping=str(table_mapping), 
                     update_date=datetime.datetime.utcnow())
     db.session.add(data)
     db.session.commit()
@@ -51,7 +51,7 @@ def update_db_table_excel_sheet_mapping_info(file_name, table_mapping):
     excel_info = get_excel_info(file_name)
     db_mapping_info = get_db_table_excel_sheet_mapping_info(excel_info.data_id)
     if db_mapping_info is not None:
-        db_mapping_info.table_mapping = table_mapping
+        db_mapping_info.table_mapping = str(table_mapping)
         db_mapping_info.update_date=datetime.datetime.utcnow()
         db.session.commit()
         return {'status':'Existing File Information updated Successfull!'}
