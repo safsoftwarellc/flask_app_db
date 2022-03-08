@@ -102,3 +102,34 @@ class json_path_data(db.Model):
 
     def __repr__(self):
         return 'json_path_string - {}'.format(self.json_path_string)
+
+class message_data(db.Model):
+    __tablename__='message_data'
+    file_id = db.Column(db.Integer, primary_key=True)
+    file_name = db.Column(db.String(50), unique = True, nullable = False)
+    file_data = db.Column(db.LargeBinary)
+    update_date = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return 'File - {}'.format(self.file_name)
+
+class message_text_data(db.Model):
+    __tablename__='message_text_data'
+    file_id = db.Column(db.Integer, primary_key=True)
+    file_name = db.Column(db.String(50), unique = True, nullable = False)
+    header_text = db.Column(db.String(600))
+    footer_text = db.Column(db.String(600))
+    line_1 = db.Column(db.String(600))
+    line_2 = db.Column(db.String(600))
+    line_3 = db.Column(db.String(600))
+    line_4 = db.Column(db.String(600))
+    line_5 = db.Column(db.String(600))
+    line_6 = db.Column(db.String(600))
+    line_7 = db.Column(db.String(600))
+    line_8 = db.Column(db.String(600))
+    line_9 = db.Column(db.String(600))
+    line_10 = db.Column(db.String(600))
+    update_date = db.Column(db.DateTime())
+
+    def __repr__(self):
+        return 'File - {}'.format(self.file_name)

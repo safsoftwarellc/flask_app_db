@@ -1,5 +1,5 @@
 import lxml.etree as ET
-from io import BytesIO
+from io import BytesIO, StringIO
 from main.util.xml_util import (get_updated_xml)
 from main.service.xml_db_service import (get_xml_data, get_all_xpaths_for_file)
 from main.service.queue_db_service import (get_certificate_info, get_queue_info)
@@ -9,7 +9,7 @@ import ast
 from main.service.excel_db_service import (get_excel_info, 
                                            get_db_table_excel_sheet_mapping_info, 
                                            get_json_path_data_info)
-
+from main.service.message_db_service import (get_message_data_info)
 from main.util.validation_util import (validate_database_info, validate_xml_info, 
                                        validate_json_info)
 
@@ -102,3 +102,11 @@ def validateExcelDataWithJSONData(json_file_name, excel_file_name, excel_file_sh
                                             excel_file_sheet, test_data_json)
     
     return final_test_results
+
+def prepare_message_from_file(message_file_name, json_data):
+    file_info = get_message_data_info(message_file_name)
+    b = BytesIO(file_info.file_data)
+    message_string = b.getvalue()
+    for text_ele, text_val in json_data:
+        message_string = message_string.replace('${'+text_ele+'}', text_val)
+    return message_string

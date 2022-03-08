@@ -13,6 +13,12 @@ Run End to End
 
 XML, Flat File, Fix File
 
+BSWIFT and GPS Messages
+
+Save Message and Generate Message and Post to MQ
+ 
+
+
 Check how to run 100 TCs for each template easily (End-to-End)
 --------------------------------------------------
 Build UI

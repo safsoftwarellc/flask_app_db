@@ -38,6 +38,13 @@ from main.controller.sql_db_controller import (
 from main.controller.test_scropts_contrller import (
     PostToMQAnXMLAndValidateInDB, PostMultipleToMQAnXMLAndValidateInDB)
 
+from main.controller.message_db_controller import (
+    save_message_file_data_info, get_message_file_data_file, remove_message_file_data,
+    get_message_file_data_info, get_all_message_file_data_info, 
+    save_message_text_data_info, get_message_text_data, remove_message_text_data,
+    get_all_message_text_data)
+
+
 app = create_app('dev')
 app.app_context().push()
 
