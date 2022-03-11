@@ -12,7 +12,7 @@ def create_app(config_name):
     from main.controller.excel_validations_controller import excel_validations_app
     from main.controller.sql_db_controller import sql_db_app
     from main.controller.user_db_controller import user_info_app
-    from main.controller.test_scropts_contrller import test_scripts_app
+    from main.controller.test_scripts_contrller import test_scripts_app
     from main.controller.message_db_controller import message_app
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])

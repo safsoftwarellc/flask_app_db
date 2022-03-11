@@ -35,8 +35,9 @@ from main.controller.sql_db_controller import (
     save_db_connection, get_db_connection, delete_db_connection, get_all_db_connection_info,
     runSQL)
 
-from main.controller.test_scropts_contrller import (
-    PostToMQAnXMLAndValidateInDB, PostMultipleToMQAnXMLAndValidateInDB)
+from main.controller.test_scripts_contrller import (
+    PostToMQ_XMLAndValidateInDB, PostMultipleToMQ_XMLAndValidateInDB,
+    PostMultipleToMQ_MessageAndValidateInDB, PostMultipleToMQ_SplitMessagesAndValidateInDB)
 
 from main.controller.message_db_controller import (
     save_message_file_data_info, get_message_file_data_file, remove_message_file_data,
