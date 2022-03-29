@@ -106,8 +106,8 @@ def validateExcelDataWithJSONData(json_file_name, excel_file_name, excel_file_sh
 def prepare_message_from_file(message_file_name, json_data):
     file_info = get_message_data_info(message_file_name)
     b = BytesIO(file_info.file_data)
-    message_string = b.getvalue()
-    for text_ele, text_val in json_data:
+    message_string = b.getvalue().decode('UTF-8')
+    for text_ele, text_val in json_data.items():
         message_string = message_string.replace('${'+text_ele+'}', text_val)
     return message_string
 
@@ -124,22 +124,22 @@ def prepare_message_from_message_text_data(message_text_data_info, json_data):
     line_9_text = update_message_from_json_data(message_text_data_info.line_9, json_data)
     line_10_text = update_message_from_json_data(message_text_data_info.line_10, json_data)
     
-    message_string = '' if not line_1_text else (line_1_text+'\n')
-    message_string = message_string + ('' if not line_2_text else (line_2_text+'\n'))
-    message_string = message_string + ('' if not line_3_text else (line_3_text+'\n'))
-    message_string = message_string + ('' if not line_4_text else (line_4_text+'\n'))
-    message_string = message_string + ('' if not line_5_text else (line_5_text+'\n'))
-    message_string = message_string + ('' if not line_6_text else (line_6_text+'\n'))
-    message_string = message_string + ('' if not line_7_text else (line_7_text+'\n'))
-    message_string = message_string + ('' if not line_8_text else (line_8_text+'\n'))
-    message_string = message_string + ('' if not line_9_text else (line_9_text+'\n'))
-    message_string = message_string + ('' if not line_10_text else (line_10_text+'\n'))
+    message_string = '' if not line_1_text else (line_1_text)
+    message_string = message_string + ('' if not line_2_text else ('\n'+line_2_text))
+    message_string = message_string + ('' if not line_3_text else ('\n'+line_3_text))
+    message_string = message_string + ('' if not line_4_text else ('\n'+line_4_text))
+    message_string = message_string + ('' if not line_5_text else ('\n'+line_5_text))
+    message_string = message_string + ('' if not line_6_text else ('\n'+line_6_text))
+    message_string = message_string + ('' if not line_7_text else ('\n'+line_7_text))
+    message_string = message_string + ('' if not line_8_text else ('\n'+line_8_text))
+    message_string = message_string + ('' if not line_9_text else ('\n'+line_9_text))
+    message_string = message_string + ('' if not line_10_text else ('\n'+line_10_text))
 
     return message_string
 
 def update_message_from_json_data(message_text, json_data):
     if not message_text:
         return message_text
-    for text_ele, text_val in json_data:
+    for text_ele, text_val in json_data.items():
         message_text = message_text.replace('${'+text_ele+'}', text_val)
     return message_text

@@ -66,7 +66,7 @@ def get_all_message_file_data_info():
 
 
 @message_app.route('/message_text', methods=['POST', 'PUT'])
-def save_message_text_data_info():
+def save_split_message_text_data_info():
     file_name=request.args.get('message_file_name')
     header_text=request.args.get('header_text')
     footer_text=request.args.get('footer_text')

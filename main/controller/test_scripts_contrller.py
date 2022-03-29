@@ -212,6 +212,7 @@ def PostMultipleToMQ_SplitMessagesAndValidateInDB():
         
         if header_text and not final_message_text:
             final_message_text = update_message_from_json_data(header_text, record)
+            final_message_text = final_message_text+'\n'+message_str
         elif not header_text and not final_message_text:
             final_message_text = message_str
         else:
